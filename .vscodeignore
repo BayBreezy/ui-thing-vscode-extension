@@ -1,0 +1,25 @@
+.vscode/**
+.github/**
+.vscode-test/**
+src/**
+.gitignore
+.yarnrc
+vsc-extension-quickstart.md
+**/tsconfig.json
+**/eslint.config.mjs
+**/*.map
+**/*.ts
+**/.vscode-test.*
+
+.prettierrc
+**/*.test.*
+coverage/**
+node_modules/**
+
+# Exclude build artifacts
+out/**
+dist/*.map
+EXTENSION_PLAN.md
+CHANGELOG.md
+svgToFont.js
+tsdown.config.mts

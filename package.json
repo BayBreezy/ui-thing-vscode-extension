@@ -1,0 +1,162 @@
+{
+  "name": "ui-thing-vscode-extension",
+  "displayName": "UI Thing",
+  "version": "0.0.1",
+  "description": "UI Thing VSCode extension",
+  "categories": [
+    "Other",
+    "Snippets"
+  ],
+  "keywords": [
+    "nuxt",
+    "snippets",
+    "uithing",
+    "tailwind"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BayBreezy/ui-thing-vscode-extension.git"
+  },
+  "license": "MIT",
+  "publisher": "uithing",
+  "main": "./dist/extension.js",
+  "scripts": {
+    "dev": "tsdown -w ./src -w package.json -w snippets",
+    "format": "prettier --write .",
+    "install:local": "rm -rf ui-thing-vscode-extension-*.vsix && vsce package && code --install-extension ui-thing-vscode-extension-*.vsix --profile 'Nuxt 3'",
+    "knip": "knip",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "package": "vsce package",
+    "prepare": "husky",
+    "test": "vscode-test"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "category": "UI Thing",
+        "command": "uithing.createNuxtProject",
+        "title": "Create Nuxt project",
+        "shortTitle": "Create Nuxt App"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.init",
+        "title": "Initialize",
+        "shortTitle": "Initialize"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.addComponents",
+        "title": "Add Components",
+        "shortTitle": "Add Components"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.refreshCatalog",
+        "title": "Refresh Cached Components ",
+        "shortTitle": "Refresh Cached Component"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.theme",
+        "title": "Change Theme",
+        "shortTitle": "Change Theme"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.prettier",
+        "title": "Add .prettierrc",
+        "shortTitle": "Add Prettier Configuration"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.shortcuts",
+        "title": "Add shortcuts composable",
+        "shortTitle": "Add Shortcuts"
+      }
+    ],
+    "configuration": {
+      "title": "UI Thing",
+      "properties": {
+        "uithing.packageManager": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "npm",
+            "pnpm",
+            "yarn",
+            "bun"
+          ],
+          "default": "auto",
+          "description": "Preferred package manager for display; CLI may still prompt."
+        },
+        "uithing.cliChannel": {
+          "type": "string",
+          "default": "latest",
+          "description": "CLI channel/version to use, e.g., latest or a specific tag."
+        },
+        "uithing.catalog.cacheTTL": {
+          "type": "number",
+          "default": 86400,
+          "description": "The number of seconds that the component catalog is cached (default: 86400 seconds = 24 hours). Set to 0 to disable caching."
+        }
+      }
+    },
+    "snippets": [
+      {
+        "language": "vue",
+        "path": "./snippets/components-full.code-snippets"
+      }
+    ]
+  },
+  "activationEvents": [
+    "workspaceContains:nuxt.config.*",
+    "onLanguage:vue"
+  ],
+  "lint-staged": {
+    "*": [
+      "bash -c 'knip'",
+      "prettier --write ."
+    ],
+    "src/**/*.{ts,js}": [
+      "npm run lint"
+    ]
+  },
+  "dependencies": {
+    "c12": "^3.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@eslint/json": "^0.13.2",
+    "@eslint/markdown": "^7.3.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.6.1",
+    "@types/vscode": "^1.104.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.36.0",
+    "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.6.0",
+    "knip": "^5.64.1",
+    "lint-staged": "^16.2.3",
+    "prettier": "^3.6.2",
+    "tsdown": "^0.15.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.45.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "vscode": "^1.104.0"
+  },
+  "icon": "assets/images/icon-curve-outline.png",
+  "galleryBanner": {
+    "color": "#101113",
+    "theme": "dark"
+  },
+  "sponsor": {
+    "url": "https://buymeacoffee.com/llehXIrI8g"
+  }
+}
