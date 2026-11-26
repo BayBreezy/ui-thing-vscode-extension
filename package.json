@@ -420,7 +420,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.19.4",
-    "@types/vscode": "^1.146.0",
+    "@types/vscode": "1.104.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.1.1",

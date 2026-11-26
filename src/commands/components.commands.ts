@@ -183,9 +183,7 @@ async function diffComponent(component: Component, cwd: string, config: UiThingC
         ? upstreamUri(`missing/${component.value}`, file.path, "")
         : vscode.Uri.file(path.join(cwd, file.path));
     const title =
-      file.status === "missing"
-        ? `${name} (missing locally ↔ latest)`
-        : `${name} (yours ↔ latest)`;
+      file.status === "missing" ? `${name} (missing locally ↔ latest)` : `${name} (yours ↔ latest)`;
     await vscode.commands.executeCommand("vscode.diff", left, latest, title, {
       preview: files.length === 1,
     });

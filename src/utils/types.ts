@@ -49,8 +49,7 @@ export type RegistryIndexItem = {
 };
 
 export type RegistrySource =
-  | string
-  | { url: string; headers?: Record<string, string>; params?: Record<string, string> };
+  string | { url: string; headers?: Record<string, string>; params?: Record<string, string> };
 
 export type ExecuteTerminalCommand = {
   command: string;
