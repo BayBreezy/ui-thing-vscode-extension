@@ -1,0 +1,8 @@
+{
+  "items": {
+    "HoloMosaic": {
+      "source": "https://vue-bits.dev/r/HoloMosaic.json",
+      "files": ["app/components/Ui/HoloMosaic/HoloMosaic.vue"]
+    }
+  }
+}

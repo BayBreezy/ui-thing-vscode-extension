@@ -1,0 +1,5 @@
+dist
+.vscode-test
+test/fixtures
+*.vsix
+package-lock.json
