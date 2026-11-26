@@ -2,16 +2,24 @@
   "name": "ui-thing-vscode-extension",
   "displayName": "UI Thing",
   "version": "0.0.1",
-  "description": "UI Thing VSCode extension",
+  "description": "Add UI Thing components, blocks and registry items to Nuxt apps, compare them with upstream, and connect the UI Thing MCP server.",
   "categories": [
     "Other",
-    "Snippets"
+    "Snippets",
+    "AI"
   ],
   "keywords": [
     "nuxt",
-    "snippets",
+    "vue",
     "uithing",
-    "tailwind"
+    "ui-thing",
+    "tailwind",
+    "components",
+    "blocks",
+    "shadcn",
+    "registry",
+    "mcp",
+    "snippets"
   ],
   "repository": {
     "type": "git",
@@ -21,61 +29,321 @@
   "publisher": "uithing",
   "main": "./dist/extension.js",
   "scripts": {
+    "build": "tsdown",
     "dev": "tsdown -w ./src -w package.json -w snippets",
     "format": "prettier --write .",
     "install:local": "rm -rf ui-thing-vscode-extension-*.vsix && vsce package && code --install-extension ui-thing-vscode-extension-*.vsix --profile 'Nuxt 3'",
     "knip": "knip",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "package": "vsce package",
+    "package": "tsdown && vsce package",
     "prepare": "husky",
-    "test": "vscode-test"
+    "test": "vitest run",
+    "test:e2e": "tsdown && vscode-test",
+    "typecheck": "tsc --noEmit"
   },
   "contributes": {
     "commands": [
       {
         "category": "UI Thing",
         "command": "uithing.createNuxtProject",
-        "title": "Create Nuxt project",
-        "shortTitle": "Create Nuxt App"
+        "title": "Create Nuxt Project",
+        "icon": "$(new-folder)"
       },
       {
         "category": "UI Thing",
         "command": "uithing.init",
         "title": "Initialize",
-        "shortTitle": "Initialize"
+        "icon": "$(rocket)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.info",
+        "title": "Project Info",
+        "icon": "$(info)"
       },
       {
         "category": "UI Thing",
         "command": "uithing.addComponents",
         "title": "Add Components",
-        "shortTitle": "Add Components"
+        "icon": "$(add)"
       },
       {
         "category": "UI Thing",
-        "command": "uithing.refreshCatalog",
-        "title": "Refresh Cached Components ",
-        "shortTitle": "Refresh Cached Component"
+        "command": "uithing.addBlocks",
+        "title": "Add Blocks",
+        "icon": "$(layout)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.addFromRegistry",
+        "title": "Add from Registry",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.addRegistryNamespace",
+        "title": "Add Registry Namespace"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.diff",
+        "title": "Compare with Latest Version",
+        "icon": "$(diff)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.update",
+        "title": "Update Components",
+        "icon": "$(sync)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.remove",
+        "title": "Remove Components",
+        "icon": "$(trash)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.viewSource",
+        "title": "View Component Source",
+        "icon": "$(code)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.openDocs",
+        "title": "Open Component Docs",
+        "icon": "$(book)"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.openFile",
+        "title": "Open File"
       },
       {
         "category": "UI Thing",
         "command": "uithing.theme",
         "title": "Change Theme",
-        "shortTitle": "Change Theme"
+        "icon": "$(symbol-color)"
       },
       {
         "category": "UI Thing",
         "command": "uithing.prettier",
-        "title": "Add .prettierrc",
-        "shortTitle": "Add Prettier Configuration"
+        "title": "Add Prettier Config"
       },
       {
         "category": "UI Thing",
         "command": "uithing.shortcuts",
-        "title": "Add shortcuts composable",
-        "shortTitle": "Add Shortcuts"
+        "title": "Add Shortcuts Composable"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.mcpInit",
+        "title": "Connect MCP Server to Project"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.installSkill",
+        "title": "Install Agent Skill"
+      },
+      {
+        "category": "UI Thing",
+        "command": "uithing.refreshCatalog",
+        "title": "Refresh Catalog",
+        "icon": "$(refresh)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "uithing",
+          "title": "UI Thing",
+          "icon": "assets/icons/activity-bar.svg"
+        }
+      ]
+    },
+    "views": {
+      "uithing": [
+        {
+          "id": "uithing.installed",
+          "name": "Installed"
+        },
+        {
+          "id": "uithing.components",
+          "name": "Components",
+          "visibility": "collapsed"
+        },
+        {
+          "id": "uithing.blocks",
+          "name": "Blocks",
+          "visibility": "collapsed"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "uithing.installed",
+        "contents": "No Nuxt project found in this workspace.\n[Create Nuxt Project](command:uithing.createNuxtProject)\nOr open a folder that has a nuxt.config file.",
+        "when": "!uithing.hasNuxtProject"
+      },
+      {
+        "view": "uithing.installed",
+        "contents": "UI Thing is not set up in this project yet.\n[Initialize UI Thing](command:uithing.init)",
+        "when": "uithing.hasNuxtProject && !uithing.initialized"
+      },
+      {
+        "view": "uithing.installed",
+        "contents": "No UI Thing components in this project yet.\n[Add Components](command:uithing.addComponents)\n[Add Blocks](command:uithing.addBlocks)\n[Add from Registry](command:uithing.addFromRegistry)",
+        "when": "uithing.initialized"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "uithing.addComponents",
+          "when": "view == uithing.installed",
+          "group": "navigation@1"
+        },
+        {
+          "command": "uithing.addFromRegistry",
+          "when": "view == uithing.installed",
+          "group": "navigation@2"
+        },
+        {
+          "command": "uithing.refreshCatalog",
+          "when": "view =~ /^uithing\\./",
+          "group": "navigation@9"
+        },
+        {
+          "command": "uithing.addBlocks",
+          "when": "view == uithing.installed",
+          "group": "1_add@1"
+        },
+        {
+          "command": "uithing.update",
+          "when": "view == uithing.installed",
+          "group": "2_manage@1"
+        },
+        {
+          "command": "uithing.theme",
+          "when": "view == uithing.installed",
+          "group": "3_project@1"
+        },
+        {
+          "command": "uithing.info",
+          "when": "view == uithing.installed",
+          "group": "3_project@2"
+        },
+        {
+          "command": "uithing.mcpInit",
+          "when": "view == uithing.installed",
+          "group": "4_ai@1"
+        },
+        {
+          "command": "uithing.installSkill",
+          "when": "view == uithing.installed",
+          "group": "4_ai@2"
+        },
+        {
+          "command": "uithing.addBlocks",
+          "when": "view == uithing.blocks",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "uithing.openDocs",
+          "when": "view == uithing.installed && viewItem == installed.docs",
+          "group": "inline@1"
+        },
+        {
+          "command": "uithing.diff",
+          "when": "view == uithing.installed && viewItem =~ /^(installed|registryItem)/",
+          "group": "inline@2"
+        },
+        {
+          "command": "uithing.update",
+          "when": "view == uithing.installed && viewItem =~ /^(installed|registryItem)/",
+          "group": "inline@3"
+        },
+        {
+          "command": "uithing.remove",
+          "when": "view == uithing.installed && viewItem =~ /^(installed|registryItem)/",
+          "group": "inline@4"
+        },
+        {
+          "command": "uithing.viewSource",
+          "when": "view == uithing.installed && viewItem =~ /^installed/",
+          "group": "1_view@1"
+        },
+        {
+          "command": "uithing.openDocs",
+          "when": "view == uithing.installed && viewItem == installed.docs",
+          "group": "1_view@2"
+        },
+        {
+          "command": "uithing.diff",
+          "when": "view == uithing.installed && viewItem =~ /^(installed|registryItem)/",
+          "group": "2_manage@1"
+        },
+        {
+          "command": "uithing.update",
+          "when": "view == uithing.installed && viewItem =~ /^(installed|registryItem)/",
+          "group": "2_manage@2"
+        },
+        {
+          "command": "uithing.remove",
+          "when": "view == uithing.installed && viewItem =~ /^(installed|registryItem)/",
+          "group": "2_manage@3"
+        },
+        {
+          "command": "uithing.openDocs",
+          "when": "view == uithing.components && viewItem == catalog.docs",
+          "group": "inline@1"
+        },
+        {
+          "command": "uithing.addComponents",
+          "when": "view == uithing.components && viewItem =~ /^catalog/",
+          "group": "inline@2"
+        },
+        {
+          "command": "uithing.addComponents",
+          "when": "view == uithing.components && viewItem =~ /^catalog/",
+          "group": "1_add@1"
+        },
+        {
+          "command": "uithing.viewSource",
+          "when": "view == uithing.components && viewItem =~ /^catalog/",
+          "group": "2_view@1"
+        },
+        {
+          "command": "uithing.openDocs",
+          "when": "view == uithing.components && viewItem == catalog.docs",
+          "group": "2_view@2"
+        },
+        {
+          "command": "uithing.addBlocks",
+          "when": "view == uithing.blocks && viewItem =~ /^(block|blockCategory)$/",
+          "group": "inline@1"
+        },
+        {
+          "command": "uithing.addBlocks",
+          "when": "view == uithing.blocks && viewItem =~ /^(block|blockCategory)$/",
+          "group": "1_add@1"
+        },
+        {
+          "command": "uithing.viewSource",
+          "when": "view == uithing.blocks && viewItem == block",
+          "group": "2_view@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "uithing.openFile",
+          "when": "false"
+        }
+      ]
+    },
     "configuration": {
       "title": "UI Thing",
       "properties": {
@@ -86,23 +354,41 @@
             "npm",
             "pnpm",
             "yarn",
-            "bun"
+            "bun",
+            "deno"
           ],
           "default": "auto",
-          "description": "Preferred package manager for display; CLI may still prompt."
+          "markdownDescription": "Package manager used to run the CLI (`npx`, `pnpm dlx`, `yarn dlx`, `bunx`, `deno run`). `auto` detects it from the project's lockfile."
         },
         "uithing.cliChannel": {
           "type": "string",
           "default": "latest",
-          "description": "CLI channel/version to use, e.g., latest or a specific tag."
+          "markdownDescription": "Version or dist-tag of the `ui-thing` CLI to run, for example `latest` or `0.4.1`. The extension needs 0.4.1 or newer."
         },
         "uithing.catalog.cacheTTL": {
           "type": "number",
           "default": 86400,
-          "description": "The number of seconds that the component catalog is cached (default: 86400 seconds = 24 hours). Set to 0 to disable caching."
+          "minimum": 0,
+          "description": "How long (in seconds) the components and blocks catalogs are cached. Default 86400 (24 hours). Set to 0 to always fetch."
+        },
+        "uithing.mcp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Provide the UI Thing MCP server to VS Code (Copilot agent mode). Turn off if you configure it yourself in `mcp.json`."
+        },
+        "uithing.mcp.url": {
+          "type": "string",
+          "default": "https://uithing.com/mcp",
+          "markdownDescription": "URL of the UI Thing MCP server. Use `http://localhost:3000/mcp` when working on the UI Thing site locally."
         }
       }
     },
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "uithing",
+        "label": "UI Thing"
+      }
+    ],
     "snippets": [
       {
         "language": "vue",
@@ -112,6 +398,7 @@
   },
   "activationEvents": [
     "workspaceContains:nuxt.config.*",
+    "workspaceContains:ui-thing.config.*",
     "onLanguage:vue"
   ],
   "lint-staged": {
@@ -134,8 +421,9 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.6.1",
     "@types/vscode": "^1.104.0",
-    "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.1.1",
     "eslint": "^9.36.0",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
@@ -145,7 +433,8 @@
     "prettier": "^3.6.2",
     "tsdown": "^0.15.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.45.0"
+    "typescript-eslint": "^8.45.0",
+    "vitest": "^5.1.2"
   },
   "engines": {
     "node": ">=20",

@@ -1,5 +1,7 @@
 import { defineConfig } from "tsdown";
 
+const watching = process.argv.includes("-w") || process.argv.includes("--watch");
+
 export default defineConfig({
   entry: ["./src/extension.ts"],
   dts: false,
@@ -8,5 +10,6 @@ export default defineConfig({
   external: ["vscode"],
   noExternal: ["c12"],
   minify: false,
-  onSuccess: "npm run install:local",
+  // Reinstall into the local VS Code profile only while developing (`npm run dev`).
+  onSuccess: watching ? "npm run install:local" : undefined,
 });
