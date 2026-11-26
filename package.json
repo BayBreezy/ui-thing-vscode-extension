@@ -1,7 +1,7 @@
 {
   "name": "ui-thing-vscode-extension",
   "displayName": "UI Thing",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Add UI Thing components, blocks and registry items to Nuxt apps, compare them with upstream, and connect the UI Thing MCP server.",
   "categories": [
     "Other",
