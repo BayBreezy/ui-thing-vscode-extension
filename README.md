@@ -10,6 +10,16 @@ Use [UI Thing](https://uithing.com) without leaving VS Code. Browse and add comp
 
 The extension drives the [`ui-thing` CLI](https://www.npmjs.com/package/ui-thing), so everything it does is what the CLI does. Commands run in a **UI Thing** terminal, where you can watch and answer any prompts.
 
+## Install
+
+Download `ui-thing-vscode-extension-<version>.vsix` from the [latest release](https://github.com/BayBreezy/ui-thing-vscode-extension/releases/latest), then in VS Code open the **Extensions** view, click `···` and choose **Install from VSIX…**. Or from a terminal:
+
+```bash
+code --install-extension ui-thing-vscode-extension-0.1.0.vsix
+```
+
+Use `cursor` or `windsurf` instead of `code` for Cursor and Windsurf. Extensions installed this way don't update themselves, so check the [releases](https://github.com/BayBreezy/ui-thing-vscode-extension/releases) for new versions.
+
 ## Features
 
 - **UI Thing sidebar** in the Activity Bar:
